@@ -2,21 +2,23 @@
 
 REPO_DIR="$HOME/GitHub/dotfiles/Linux"
 CONFIG_DIR="$HOME/.config"
-BACKUP_DIR="$HOME/dotfiles_backup_$(date +%Y%m%d_%H%M%S)"
 
-echo "Installing packages using apt..."
+echo "Starting clean installation of Dotfiles..."
+
+echo "Configuring repositories and packages..."
 sudo apt update
-sudo apt install -y bspwm sxhkd polybar alacritty rofi picom nvim nitrogen neofetch zsh curl wget
+sudo apt install -y software-properties-common curl wget git unzip
+sudo add-apt-repository -y ppa:aslatter/ppa
+sudo apt update
 
+sudo apt install -y bspwm sxhkd polybar alacritty rofi picom nvim nitrogen neofetch zsh
 
+echo "Installing Oh-My-Zsh..."
+if [ ! -d "$HOME/.oh-my-zsh" ]; then
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+fi
 
-echo "Creating backup of existing configuration files..."
-mkdir -p "$BACKUP_DIR"
-[ -d "$CONFIG_DIR/bspwm" ] && cp -r "$CONFIG_DIR/bspwm" "$BACKUP_DIR"
-[ -d "$CONFIG_DIR/polybar" ] && cp -r "$CONFIG_DIR/polybar" "$BACKUP_DIR"
-[ -f "$HOME/.zshrc" ] && cp "$HOME/.zshrc" "$BACKUP_DIR"
-
-
+# 4. Copia de archivos del Repo al Sistema
 echo "Copying configuration files..."
 
 mkdir -p "$CONFIG_DIR/bspwm" "$CONFIG_DIR/sxhkd" "$CONFIG_DIR/polybar" "$CONFIG_DIR/alacritty" "$CONFIG_DIR/rofi" "$CONFIG_DIR/nvim"
@@ -33,8 +35,9 @@ cp "$REPO_DIR/.Xdefaults" "$HOME/.Xdefaults" 2>/dev/null
 
 echo "Installing Nerd Font..."
 mkdir -p ~/.local/share/fonts
-wget -P ~/.local/share/fonts https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/JetBrainsMono.zip
-cd ~/.local/share/fonts && unzip -o JetBrainsMono.zip && rm JetBrainsMono.zip
+wget -q --show-progress https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/JetBrainsMono.zip
+unzip -o JetBrainsMono.zip -d ~/.local/share/fonts
+rm JetBrainsMono.zip
 fc-cache -fv
 
-echo "All set! Restart your session to see the changes."
+echo ""
