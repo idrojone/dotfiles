@@ -1,0 +1,15 @@
+# Terminal y Shell
+alacritty
+zsh
+
+# Window Manager
+bspwm
+sxhkd
+polybar
+picom
+nitrogen
+
+# Apps
+code
+rofi
+feh
